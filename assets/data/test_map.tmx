@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="18" tilewidth="8" tileheight="8" backgroundcolor="#d3e29a" nextobjectid="44">
+ <properties>
+  <property name="backdropCount" type="int" value="2"/>
+  <property name="backdropName" value="clouds"/>
+ </properties>
  <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="64" columns="8">
   <image source="../images/tiles.png" width="64" height="64"/>
  </tileset>

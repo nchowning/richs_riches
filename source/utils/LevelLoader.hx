@@ -1,6 +1,7 @@
 package utils;
 
 import flixel.FlxG;
+import flixel.addons.display.FlxBackdrop;
 import flixel.addons.editors.tiled.TiledLayer;
 import flixel.addons.editors.tiled.TiledTileLayer;
 import flixel.addons.editors.tiled.TiledMap;
@@ -16,6 +17,25 @@ class LevelLoader
     public static function loadLevel(level:String)
     {
         var tiledMap = new TiledMap("assets/data/" + level + ".tmx");
+
+        // Load backdrop images
+        var backdropName:String = getMapProperty(tiledMap, "backdropName");
+        var backdropCount:Int = Std.parseInt(getMapProperty(tiledMap, "backdropCount"));
+
+        for (i in 1...(backdropCount + 1))
+        {
+            // The player movement initiated scroll speeds
+            var backdropScrollSpeedX:Float = i * 0.1;
+            var backdropScrollSpeedY:Float = 0.0;
+
+            var backdrop = new FlxBackdrop("assets/images/backdrops/" + backdropName + i + ".png", backdropScrollSpeedX, backdropScrollSpeedY, true, false);
+
+            // Auto-scroll speeds
+            backdrop.velocity.x = i * -4;
+            backdrop.velocity.y = 0;
+
+            Reg.STATE.backdrops.add(backdrop);
+        }
 
         // Load background tiles
         Reg.STATE.mapBackground = getTileLayer(tiledMap, "background");
@@ -51,6 +71,13 @@ class LevelLoader
         // Set the player's start position
         var playerPos:TiledObject = getObjectLayer(tiledMap, "player")[0];
         Reg.STATE.player.setPosition(playerPos.x, playerPos.y - 15);
+    }
+
+    private static function getMapProperty(map:TiledMap, property:String):String
+    {
+        if (map.properties.contains(property))
+            return map.properties.get(property);
+        return "";
     }
 
     private static function getTileLayer(map:TiledMap, layer:String):FlxTilemap

@@ -3,14 +3,17 @@ package states;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.util.FlxColor;
+import flixel.system.FlxSound;
 import flixel.tweens.FlxTween;
+import flixel.util.FlxColor;
 
 import states.PlatformState;
 
 class LogoState extends FlxState
 {
     private var logo:FlxSprite;
+    private var startupSound:FlxSound;
+    private var scrollTween:FlxTween;
 
     override public function create():Void
     {
@@ -25,17 +28,30 @@ class LogoState extends FlxState
         logo.loadGraphic(AssetPaths.logo_scroll__png, true, 160, 16);
         add(logo);
 
-        // TODO have first tween play game boys startup sound on complete
-        FlxTween.tween(logo, {y: (160 / 2) - 16}, 4.0)
-            .wait(2.0)
-            .then(FlxTween.tween(logo, {y: (160 / 2) - 16}, 0.05, {onComplete: startGame}));
+        startupSound = FlxG.sound.load(AssetPaths.gameboy_start_up__ogg);
+
+        scrollTween = FlxTween.tween(logo, {y: (160 / 2) - 16}, 3.0,
+                                     {onComplete: playStartupSound})
+                      .wait(1.5)
+                      .then(FlxTween.tween(logo, {y: (160 / 2) - 16}, 0.05,
+                                           {onComplete: startGame}));
     }
 
-    override public update(elapsed:Float):Void
+    override public function update(elapsed:Float):Void
     {
-        // TODO add logic to skip this intro
+        // Skip the intro
+        if (FlxG.keys.pressed.ESCAPE)
+        {
+            FlxTween.manager.clear();
+            FlxG.switchState(new PlatformState());
+        }
 
         super.update(elapsed);
+    }
+
+    private function playStartupSound(_)
+    {
+        startupSound.play(false, 75.0);
     }
 
     private function startGame(_)

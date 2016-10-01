@@ -5,6 +5,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.addons.display.FlxBackdrop;
 import flixel.group.FlxGroup;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
@@ -19,6 +20,8 @@ import utils.LevelLoader;
 
 class PlatformState extends FlxState
 {
+    public var backdrops(default, null):FlxTypedGroup<FlxSprite>;
+
     public var mapBackground:FlxTilemap;
     public var mapCollide:FlxTilemap;
     public var mapForeground:FlxTilemap;
@@ -36,16 +39,19 @@ class PlatformState extends FlxState
         // Set the background color to the lightest of our pallette
         FlxG.cameras.bgColor = new FlxColor(0xffd3e29a);
 
+        // Initialize map backdrops, objects, & player
+        backdrops = new FlxTypedGroup<FlxSprite>();
         obtainables = new FlxGroup();
         coins = new FlxTypedGroup<FlxSprite>();
         enemies = new FlxTypedGroup<FlxSprite>();
-
         player = new Player();
 
+        // Load the level
         LevelLoader.loadLevel("test_map");
 
+        // Add objects to state
+        add(backdrops);
         obtainables.add(coins);
-
         add(mapBackground);
         add(obtainables);
         add(enemies);
@@ -53,8 +59,10 @@ class PlatformState extends FlxState
         add(mapCollide);
         add(mapForeground);
 
+        // Set camera scroll type & bounds
         FlxG.camera.follow(player, FlxCameraFollowStyle.PLATFORMER);
         FlxG.camera.setScrollBoundsRect(0, 0, mapCollide.width, mapCollide.height, true);
+
 		super.create();
 	}
 
