@@ -1,0 +1,72 @@
+package states;
+
+import flixel.FlxCamera;
+import flixel.FlxG;
+import flixel.FlxObject;
+import flixel.FlxSprite;
+import flixel.FlxState;
+import flixel.group.FlxGroup;
+import flixel.math.FlxMath;
+import flixel.text.FlxText;
+import flixel.tile.FlxTilemap;
+import flixel.ui.FlxButton;
+import flixel.util.FlxColor;
+
+import objects.Coin;
+import objects.Obtainable;
+import objects.Player;
+import utils.LevelLoader;
+
+class PlatformState extends FlxState
+{
+    public var mapBackground:FlxTilemap;
+    public var mapCollide:FlxTilemap;
+    public var mapForeground:FlxTilemap;
+
+    public var obtainables:FlxGroup;
+    public var coins(default, null):FlxTypedGroup<FlxSprite>;
+    public var player(default, null):Player;
+
+	override public function create():Void
+	{
+        Reg.STATE = cast this;
+
+        // Set the background color to the lightest of our pallette
+        FlxG.cameras.bgColor = new FlxColor(0xffd3e29a);
+
+        obtainables = new FlxGroup();
+        coins = new FlxTypedGroup<FlxSprite>();
+
+        player = new Player();
+
+        LevelLoader.loadLevel("test_map");
+
+        obtainables.add(coins);
+
+        add(mapBackground);
+        add(obtainables);
+        add(player);
+        add(mapCollide);
+        add(mapForeground);
+
+        FlxG.camera.follow(player, FlxCameraFollowStyle.PLATFORMER);
+        FlxG.camera.setScrollBoundsRect(0, 0, mapCollide.width, mapCollide.height, true);
+		super.create();
+	}
+
+	override public function update(elapsed:Float):Void
+	{
+		super.update(elapsed);
+
+        if (player.alive)
+        {
+            FlxG.overlap(obtainables, player, collectObtainables);
+            FlxG.collide(mapCollide, player);
+        }
+	}
+
+    function collectObtainables(obtainable:Obtainable, player:Player):Void
+    {
+        obtainable.collect();
+    }
+}
