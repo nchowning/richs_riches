@@ -31,6 +31,13 @@ class LogoState extends FlxState
             .then(FlxTween.tween(logo, {y: (160 / 2) - 16}, 0.05, {onComplete: startGame}));
     }
 
+    override public update(elapsed:Float):Void
+    {
+        // TODO add logic to skip this intro
+
+        super.update(elapsed);
+    }
+
     private function startGame(_)
     {
         FlxG.switchState(new PlatformState());
