@@ -25,6 +25,8 @@ class PlatformState extends FlxState
 
     public var obtainables:FlxGroup;
     public var coins(default, null):FlxTypedGroup<FlxSprite>;
+    public var enemies(default, null):FlxTypedGroup<FlxSprite>;
+
     public var player(default, null):Player;
 
 	override public function create():Void
@@ -36,6 +38,7 @@ class PlatformState extends FlxState
 
         obtainables = new FlxGroup();
         coins = new FlxTypedGroup<FlxSprite>();
+        enemies = new FlxTypedGroup<FlxSprite>();
 
         player = new Player();
 
@@ -45,6 +48,7 @@ class PlatformState extends FlxState
 
         add(mapBackground);
         add(obtainables);
+        add(enemies);
         add(player);
         add(mapCollide);
         add(mapForeground);
@@ -58,11 +62,15 @@ class PlatformState extends FlxState
 	{
 		super.update(elapsed);
 
+        // Player collision detection
         if (player.alive)
         {
             FlxG.overlap(obtainables, player, collectObtainables);
             FlxG.collide(mapCollide, player);
         }
+
+        // Enemy collision detection
+        FlxG.collide(mapCollide, enemies);
 	}
 
     function collectObtainables(obtainable:Obtainable, player:Player):Void

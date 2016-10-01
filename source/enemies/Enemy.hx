@@ -1,6 +1,6 @@
-package objects;
+package enemies;
 
-import flixel.FLxSPrite;
+import flixel.FlxSprite;
 
 class Enemy extends FlxSprite
 {
@@ -19,6 +19,14 @@ class Enemy extends FlxSprite
 
     override public function update(elapsed:Float)
     {
+        if (isOnScreen() && alive)
+        {
+            move();
+        }
 
+        if (!Reg.PAUSE)
+            super.update(elapsed);
     }
+
+    private function move() {}
 }

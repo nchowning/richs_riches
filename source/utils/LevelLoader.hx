@@ -8,6 +8,7 @@ import flixel.addons.editors.tiled.TiledObject;
 import flixel.addons.editors.tiled.TiledObjectLayer;
 import flixel.tile.FlxTilemap;
 
+import enemies.Placeholder;
 import objects.Coin;
 
 class LevelLoader
@@ -34,6 +35,16 @@ class LevelLoader
             {
                 case "coin":
                     Reg.STATE.coins.add(new Coin(obtainable.x, obtainable.y - 8));
+            }
+        }
+
+        // Load enemy objects
+        for (enemy in getObjectLayer(tiledMap, "enemies"))
+        {
+            switch(enemy.type)
+            {
+                default:
+                    Reg.STATE.enemies.add(new Placeholder(enemy.x, enemy.y - 6));
             }
         }
 
