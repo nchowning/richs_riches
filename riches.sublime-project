@@ -1,0 +1,25 @@
+{
+	"folders":
+	[
+		{
+			"follow_symlinks": true,
+			"name": "riches",
+			"path": "/home/nathan/workspace/GAMEDEV/riches"
+		},
+		{
+			"follow_symlinks": true,
+			"name": "Flixel",
+			"path": "/usr/share/haxe/lib/flixel/4,1,1/"
+		},
+		{
+			"follow_symlinks": true,
+			"name": "Flixel Addons",
+			"path": "/usr/share/haxe/lib/flixel-addons/2,1,0/"
+		},
+		{
+			"follow_symlinks": true,
+			"name": "Haxe",
+			"path": "/usr/lib/haxe/std"
+		}
+	]
+}

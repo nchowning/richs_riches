@@ -23,6 +23,7 @@ class PlatformState extends FlxState
     public var backdrops(default, null):FlxTypedGroup<FlxSprite>;
 
     public var mapBackground:FlxTilemap;
+    public var mapPlatforms:FlxTilemap;
     public var mapCollide:FlxTilemap;
     public var mapForeground:FlxTilemap;
 
@@ -36,9 +37,6 @@ class PlatformState extends FlxState
 	{
         Reg.STATE = cast this;
 
-        // Set the background color to the lightest of our pallette
-        FlxG.cameras.bgColor = new FlxColor(0xffd3e29a);
-
         // Initialize map backdrops, objects, & player
         backdrops = new FlxTypedGroup<FlxSprite>();
         obtainables = new FlxGroup();
@@ -47,7 +45,7 @@ class PlatformState extends FlxState
         player = new Player();
 
         // Load the level
-        LevelLoader.loadLevel("test_map");
+        LevelLoader.loadLevel("level_select");
 
         // Add objects to state
         add(backdrops);
@@ -55,6 +53,7 @@ class PlatformState extends FlxState
         add(mapBackground);
         add(obtainables);
         add(enemies);
+        add(mapPlatforms);
         add(player);
         add(mapCollide);
         add(mapForeground);
@@ -68,18 +67,24 @@ class PlatformState extends FlxState
 
 	override public function update(elapsed:Float):Void
 	{
-		super.update(elapsed);
+        super.update(elapsed);
 
         // Player collision detection
         if (player.alive)
         {
             FlxG.overlap(obtainables, player, collectObtainables);
+            FlxG.collide(mapPlatforms, player);
             FlxG.collide(mapCollide, player);
         }
 
         // Enemy collision detection
         FlxG.collide(mapCollide, enemies);
 	}
+
+    function platformCollision(tile:FlxTilemap, player:Player):Void
+    {
+        FlxObject.separate(tile, player);
+    }
 
     function collectObtainables(obtainable:Obtainable, player:Player):Void
     {
