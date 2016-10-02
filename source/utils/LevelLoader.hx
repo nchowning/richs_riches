@@ -13,6 +13,7 @@ import flixel.util.FlxColor;
 
 import enemies.Placeholder;
 import objects.Coin;
+import objects.Warp;
 
 class LevelLoader
 {
@@ -64,6 +65,15 @@ class LevelLoader
             {
                 default:
                     Reg.STATE.enemies.add(new Placeholder(enemy.x, enemy.y - 6));
+            }
+        }
+
+        // Load warps on the map
+        for (warp in getObjectLayer(tiledMap, "warp"))
+        {
+            if (warp.properties.contains("warpToMap"))
+            {
+                Reg.STATE.warps.add(new Warp(warp.x, warp.y, warp.properties.get("warpToMap")));
             }
         }
 

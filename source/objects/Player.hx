@@ -13,6 +13,8 @@ class Player extends FlxSprite
     private static var _walkSpeed:Int = 55;
     private static var _fallingSpeed:Int = 300;
 
+    public var lookingUp:Bool = false;
+
     public function new()
     {
         super();
@@ -69,6 +71,10 @@ class Player extends FlxSprite
         if ((velocity.y < 0) && (FlxG.keys.justReleased.SPACE))
             velocity.y = velocity.y * 0.5;
 
+        if (FlxG.keys.pressed.UP)
+            lookingUp = true;
+        else
+            lookingUp = false;
     }
 
     private function animate()

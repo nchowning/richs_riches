@@ -16,6 +16,7 @@ import flixel.util.FlxColor;
 import objects.Coin;
 import objects.Obtainable;
 import objects.Player;
+import objects.Warp;
 import utils.LevelLoader;
 
 class PlatformState extends FlxState
@@ -27,6 +28,7 @@ class PlatformState extends FlxState
     public var mapCollide:FlxTilemap;
     public var mapForeground:FlxTilemap;
 
+    public var warps:FlxGroup;
     public var obtainables:FlxGroup;
     public var coins(default, null):FlxTypedGroup<FlxSprite>;
     public var enemies(default, null):FlxTypedGroup<FlxSprite>;
@@ -39,15 +41,17 @@ class PlatformState extends FlxState
 
         // Initialize map backdrops, objects, & player
         backdrops = new FlxTypedGroup<FlxSprite>();
+        warps = new FlxGroup();
         obtainables = new FlxGroup();
         coins = new FlxTypedGroup<FlxSprite>();
         enemies = new FlxTypedGroup<FlxSprite>();
         player = new Player();
 
         // Load the level
-        LevelLoader.loadLevel("level_select");
+        LevelLoader.loadLevel(Reg.LEVEL);
 
         // Add objects to state
+        add(warps);
         add(backdrops);
         obtainables.add(coins);
         add(mapBackground);
@@ -73,6 +77,7 @@ class PlatformState extends FlxState
         if (player.alive)
         {
             FlxG.overlap(obtainables, player, collectObtainables);
+            FlxG.overlap(warps, player, warpPlayer);
             FlxG.collide(mapPlatforms, player);
             FlxG.collide(mapCollide, player);
         }
@@ -81,13 +86,14 @@ class PlatformState extends FlxState
         FlxG.collide(mapCollide, enemies);
 	}
 
-    function platformCollision(tile:FlxTilemap, player:Player):Void
-    {
-        FlxObject.separate(tile, player);
-    }
-
-    function collectObtainables(obtainable:Obtainable, player:Player):Void
+    private function collectObtainables(obtainable:Obtainable, player:Player):Void
     {
         obtainable.collect();
+    }
+
+    private function warpPlayer(warp:Warp, player:Player):Void
+    {
+        if (player.lookingUp)
+            warp.warpToLevel();
     }
 }
