@@ -1,17 +1,17 @@
 package objects;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
+import flixel.FlxObject;
 
 import states.PlatformState;
 
-class Warp extends FlxSprite
+class Warp extends FlxObject
 {
     private var _level:String;
 
-    public function new(x:Float, y:Float, level:String)
+    public function new(x:Float, y:Float, width:Float, height:Float, level:String)
     {
-        super(x, y);
+        super(x, y, width, height);
 
         _level = level;
     }

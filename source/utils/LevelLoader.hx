@@ -13,6 +13,7 @@ import flixel.util.FlxColor;
 
 import enemies.Placeholder;
 import objects.Coin;
+import objects.Screen;
 import objects.Warp;
 
 class LevelLoader
@@ -73,8 +74,14 @@ class LevelLoader
         {
             if (warp.properties.contains("warpToMap"))
             {
-                Reg.STATE.warps.add(new Warp(warp.x, warp.y, warp.properties.get("warpToMap")));
+                Reg.STATE.warps.add(new Warp(warp.x, warp.y, warp.width, warp.height, warp.properties.get("warpToMap")));
             }
+        }
+
+        // Load 'screens' on the map
+        for (screen in getObjectLayer(tiledMap, "screens"))
+        {
+            Reg.STATE.screens.add(new Screen(screen.x, screen.y, screen.width, screen.height));
         }
 
         // Set the player's start position

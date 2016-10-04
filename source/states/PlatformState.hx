@@ -16,6 +16,7 @@ import flixel.util.FlxColor;
 import objects.Coin;
 import objects.Obtainable;
 import objects.Player;
+import objects.Screen;
 import objects.Warp;
 import utils.LevelLoader;
 
@@ -29,11 +30,14 @@ class PlatformState extends FlxState
     public var mapForeground:FlxTilemap;
 
     public var warps:FlxGroup;
+    public var screens:FlxGroup;
     public var obtainables:FlxGroup;
     public var coins(default, null):FlxTypedGroup<FlxSprite>;
     public var enemies(default, null):FlxTypedGroup<FlxSprite>;
 
     public var player(default, null):Player;
+    public var activeScreen:Screen;
+    public var screenTransitioning:Bool = false;
 
 	override public function create():Void
 	{
@@ -42,12 +46,14 @@ class PlatformState extends FlxState
         // Initialize map backdrops, objects, & player
         backdrops = new FlxTypedGroup<FlxSprite>();
         warps = new FlxGroup();
+        screens = new FlxGroup();
         obtainables = new FlxGroup();
         coins = new FlxTypedGroup<FlxSprite>();
         enemies = new FlxTypedGroup<FlxSprite>();
         player = new Player();
 
         // Load the level
+        // TODO make LevelLoader return a 'Map' object
         LevelLoader.loadLevel(Reg.LEVEL);
 
         // Add objects to state
@@ -76,10 +82,11 @@ class PlatformState extends FlxState
         // Player collision detection
         if (player.alive)
         {
+            FlxG.collide(mapCollide, player);
             FlxG.overlap(obtainables, player, collectObtainables);
             FlxG.overlap(warps, player, warpPlayer);
             FlxG.collide(mapPlatforms, player);
-            FlxG.collide(mapCollide, player);
+            FlxG.overlap(screens, player, screenTransition);
         }
 
         // Enemy collision detection
@@ -95,5 +102,27 @@ class PlatformState extends FlxState
     {
         if (player.lookingUp)
             warp.warpToLevel();
+    }
+
+    private function screenTransition(screen:Screen, player:Player):Void
+    {
+        if (activeScreen == null)
+        {
+            activeScreen = screen;
+            FlxG.camera.setScrollBoundsRect(screen.x, screen.y, screen.width, screen.height, false);
+            trace("Set active screen");
+            return;
+        }
+
+        // If this is already the active screen, skip
+        if (screen == activeScreen)
+            return;
+        
+        // If we're transitioning to a new screen, skip
+        if (screenTransitioning)
+            return;
+
+        screenTransitioning = true;
+        screen.transition(this);
     }
 }

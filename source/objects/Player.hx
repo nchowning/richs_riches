@@ -37,10 +37,12 @@ class Player extends FlxSprite
     override public function update(elapsed:Float):Void
     {
         if (!Reg.PAUSE)
+        {
             move();
-        animate();
+            animate();
 
-        super.update(elapsed);
+            super.update(elapsed);
+        }
 
         // Basic over-all map collision
         if (x < 0)
