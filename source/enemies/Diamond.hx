@@ -2,6 +2,8 @@ package enemies;
 
 class Diamond extends Enemy
 {
+    private var _walkSpeed:Int = 40;
+
     public function new(x:Float, y:Float)
     {
         super(x, y);
@@ -13,5 +15,10 @@ class Diamond extends Enemy
 
         setSize(12, 13);
         offset.set(2, 3);
+    }
+
+    override private function move()
+    {
+        velocity.x = _walkSpeed * _direction;
     }
 }

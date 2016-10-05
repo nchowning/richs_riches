@@ -91,6 +91,7 @@ class PlatformState extends FlxState
         // Enemy collision detection
         FlxG.collide(mapCollide, enemies);
         FlxG.collide(mapPlatforms, enemies);
+        FlxG.collide(enemies, enemies);
 	}
 
     private function collectObtainables(obtainable:Obtainable, player:Player):Void

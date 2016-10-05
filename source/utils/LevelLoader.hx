@@ -69,7 +69,11 @@ class LevelLoader
                     Reg.STATE.enemies.add(new Placeholder(enemy.x, enemy.y - 6));
 
                 case "blocker":
-                    Reg.STATE.enemies.add(new FlxObject(enemy.x, enemy.y, enemy.width, enemy.height));
+                {
+                    var blocker = new FlxObject(enemy.x, enemy.y, enemy.width, enemy.height);
+                    blocker.moves = false;
+                    Reg.STATE.enemies.add(blocker);
+                }
 
                 case "diamond":
                     Reg.STATE.enemies.add(new Diamond(enemy.x, enemy.y - 12));
