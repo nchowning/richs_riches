@@ -53,12 +53,12 @@ class Player extends FlxSprite
     {
         acceleration.x = 0;
 
-        if (FlxG.keys.pressed.LEFT)
+        if (FlxG.keys.anyPressed([Reg.inputMap["left"]]))
         {
             flipX = true;
             acceleration.x -= _acceleration;
         }
-        else if (FlxG.keys.pressed.RIGHT)
+        else if (FlxG.keys.anyPressed([Reg.inputMap["right"]]))
         {
             flipX = false;
             acceleration.x += _acceleration;
@@ -66,14 +66,14 @@ class Player extends FlxSprite
 
         if (velocity.y == 0)
         {
-            if (FlxG.keys.justPressed.SPACE && isTouching(FlxObject.FLOOR))
+            if (FlxG.keys.anyJustPressed([Reg.inputMap["a"]]) && isTouching(FlxObject.FLOOR))
                 velocity.y = _jumpForce;
         }
 
-        if ((velocity.y < 0) && (FlxG.keys.justReleased.SPACE))
+        if ((velocity.y < 0) && (FlxG.keys.anyJustReleased([Reg.inputMap["a"]])))
             velocity.y = velocity.y * 0.5;
 
-        if (FlxG.keys.pressed.UP)
+        if (FlxG.keys.anyPressed([Reg.inputMap["up"]]))
             lookingUp = true;
         else
             lookingUp = false;
