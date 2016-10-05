@@ -19,6 +19,13 @@ class Screen extends FlxObject
     {
         var player = state.player;
 
+        // If there's not an active screen, make this the active screen
+        if (state.activeScreen == null)
+        {
+            endTransition(null);
+            return;
+        }
+
         // Pause all movement
         Reg.PAUSE = true;
 
@@ -33,7 +40,10 @@ class Screen extends FlxObject
         FlxObject.updateTouchingFlags(this, player);
 
         // Entering the screen from the left side
-        if (player.isTouching(FlxObject.RIGHT))
+        if ((player.x < this.x) &&
+            (player.x + player.width > this.x) &&
+            (player.y > this.y) &&
+            (player.y + player.height < this.y + this.height))
         {
             // Scroll the camera to the new screen
             FlxTween.tween(FlxG.camera.scroll, {x: this.x}, 2.0, {onComplete: endTransition});
@@ -42,7 +52,10 @@ class Screen extends FlxObject
             FlxTween.tween(player, {x: player.x + player.width}, 2.0);
         }
         // Entering the screen from the right side
-        else if (player.isTouching(FlxObject.LEFT))
+        else if ((player.x < this.x + this.width) &&
+                 (player.x + player.width > this.x + this.width) &&
+                 (player.y > this.y) &&
+                 (player.y + player.height < this.y + this.height))
         {
             // Scroll the camera to the new screen
             FlxTween.tween(FlxG.camera.scroll, {x: this.x}, 2.0, {onComplete: endTransition}); 
@@ -51,7 +64,10 @@ class Screen extends FlxObject
             FlxTween.tween(player, {x: player.x - player.width}, 2.0);
         }
         // Entering the screen from the top
-        else if (player.isTouching(FlxObject.FLOOR))
+        else if ((player.x > this.x) &&
+                 (player.x + player.width < this.x + this.width) &&
+                 (player.y < this.y) &&
+                 (player.y + player.height > this.y))
         {
             // Scroll the camera to the new screen
             FlxTween.tween(FlxG.camera.scroll, {y: this.y}, 2.0, {onComplete: endTransition});
@@ -60,7 +76,10 @@ class Screen extends FlxObject
             FlxTween.tween(player, {y: player.y + player.height}, 2.0);
         }
         // Entering the screen from the bottom
-        else if (player.isTouching(FlxObject.CEILING))
+        else if ((player.x > this.x) &&
+                 (player.x + player.width < this.x + this.width) &&
+                 (player.y < this.y + this.height) &&
+                 (player.y + player.height > this.y + this.height))
         {
             // Scroll the camera to the new screen
             FlxTween.tween(FlxG.camera.scroll, {y: this.y}, 2.0, {onComplete: endTransition});
@@ -74,6 +93,7 @@ class Screen extends FlxObject
     {
         FlxG.camera.follow(Reg.STATE.player, FlxCameraFollowStyle.PLATFORMER);
         FlxG.camera.setScrollBoundsRect(x, y, width, height, false);
+
         Reg.STATE.screenTransitioning = false;
         Reg.STATE.activeScreen = this;
         Reg.PAUSE = false;
