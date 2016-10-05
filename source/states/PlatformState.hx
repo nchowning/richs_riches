@@ -33,7 +33,7 @@ class PlatformState extends FlxState
     public var screens:FlxGroup;
     public var obtainables:FlxGroup;
     public var coins(default, null):FlxTypedGroup<FlxSprite>;
-    public var enemies(default, null):FlxTypedGroup<FlxSprite>;
+    public var enemies:FlxGroup;
 
     public var player(default, null):Player;
     public var activeScreen:Screen;
@@ -49,12 +49,15 @@ class PlatformState extends FlxState
         screens = new FlxGroup();
         obtainables = new FlxGroup();
         coins = new FlxTypedGroup<FlxSprite>();
-        enemies = new FlxTypedGroup<FlxSprite>();
+        enemies = new FlxGroup();
         player = new Player();
 
         // Load the level
         // TODO make LevelLoader return a 'Map' object
         LevelLoader.loadLevel(Reg.LEVEL);
+
+        FlxG.camera.setScrollBoundsRect(0, 0, mapCollide.width, mapCollide.height, true);
+        FlxG.camera.follow(player, FlxCameraFollowStyle.PLATFORMER);
 
         // Add objects to state
         add(warps);
@@ -67,10 +70,6 @@ class PlatformState extends FlxState
         add(player);
         add(mapCollide);
         add(mapForeground);
-
-        // Set camera scroll type & bounds
-        FlxG.camera.follow(player, FlxCameraFollowStyle.PLATFORMER);
-        FlxG.camera.setScrollBoundsRect(0, 0, mapCollide.width, mapCollide.height, true);
 
 		super.create();
 	}
@@ -91,6 +90,7 @@ class PlatformState extends FlxState
 
         // Enemy collision detection
         FlxG.collide(mapCollide, enemies);
+        FlxG.collide(mapPlatforms, enemies);
 	}
 
     private function collectObtainables(obtainable:Obtainable, player:Player):Void
@@ -106,14 +106,6 @@ class PlatformState extends FlxState
 
     private function screenTransition(screen:Screen, player:Player):Void
     {
-        if (activeScreen == null)
-        {
-            activeScreen = screen;
-            FlxG.camera.setScrollBoundsRect(screen.x, screen.y, screen.width, screen.height, false);
-            trace("Set active screen");
-            return;
-        }
-
         // If this is already the active screen, skip
         if (screen == activeScreen)
             return;
