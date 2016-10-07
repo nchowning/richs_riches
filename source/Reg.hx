@@ -2,6 +2,8 @@ package;
 
 import flixel.FlxState;
 import flixel.input.keyboard.FlxKey;
+import flixel.input.gamepad.FlxGamepad;
+import flixel.input.gamepad.FlxGamepadInputID;
 
 import states.PlatformState;
 
@@ -20,5 +22,18 @@ class Reg
         "down"  => FlxKey.DOWN,
         "b"     => 0,
         "a"     => FlxKey.SPACE,
+        "start" => FlxKey.ESCAPE,
+    ];
+
+    public static var GAMEPAD:FlxGamepad;
+    public static var gamepadInputMap:Map<String, Int> = [
+        "left"   => FlxGamepadInputID.DPAD_LEFT,
+        "right"  => FlxGamepadInputID.DPAD_RIGHT,
+        "up"     => FlxGamepadInputID.DPAD_UP,
+        "down"   => FlxGamepadInputID.DPAD_DOWN,
+        "b"      => FlxGamepadInputID.X,
+        "a"      => FlxGamepadInputID.A,
+        "start"  => FlxGamepadInputID.START,
+        "select" => FlxGamepadInputID.BACK,
     ];
 }

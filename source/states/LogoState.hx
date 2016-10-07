@@ -18,6 +18,7 @@ class LogoState extends FlxState
     override public function create():Void
     {
         Reg.STATE = cast this;
+        Reg.GAMEPAD = FlxG.gamepads.lastActive;
 
         // Set the background color to the lightest of our pallette
         FlxG.cameras.bgColor = new FlxColor(0xffd3e29a);
@@ -40,7 +41,9 @@ class LogoState extends FlxState
     override public function update(elapsed:Float):Void
     {
         // Skip the intro
-        if (FlxG.keys.pressed.ESCAPE)
+        if (FlxG.keys.anyPressed([Reg.inputMap["start"]]) ||
+            // TODO figure out why this doesn't work
+            (Reg.GAMEPAD != null && Reg.GAMEPAD.anyPressed([Reg.gamepadInputMap["start"]])))
         {
             FlxTween.manager.clear();
             FlxG.switchState(new PlatformState());

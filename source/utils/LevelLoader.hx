@@ -46,6 +46,9 @@ class LevelLoader
         // Load collision tiles
         Reg.STATE.mapCollide = getTileLayer(tiledMap, "collide");
 
+        // Load kill tiles (spikes)
+        Reg.STATE.mapKill = getTileLayer(tiledMap, "kill");
+
         // Load foreground tiles
         Reg.STATE.mapForeground = getTileLayer(tiledMap, "foreground");
         Reg.STATE.mapForeground.solid = false;

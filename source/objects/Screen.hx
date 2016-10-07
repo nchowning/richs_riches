@@ -58,7 +58,7 @@ class Screen extends FlxObject
                  (player.y + player.height < this.y + this.height))
         {
             // Scroll the camera to the new screen
-            FlxTween.tween(FlxG.camera.scroll, {x: this.x}, 2.0, {onComplete: endTransition}); 
+            FlxTween.tween(FlxG.camera.scroll, {x: this.x + (this.width - 160)}, 2.0, {onComplete: endTransition});
 
             // Move the player into the new screen
             FlxTween.tween(player, {x: player.x - player.width}, 2.0);
@@ -82,7 +82,7 @@ class Screen extends FlxObject
                  (player.y + player.height > this.y + this.height))
         {
             // Scroll the camera to the new screen
-            FlxTween.tween(FlxG.camera.scroll, {y: this.y}, 2.0, {onComplete: endTransition});
+            FlxTween.tween(FlxG.camera.scroll, {y: this.y + (this.height - 144)}, 2.0, {onComplete: endTransition});
 
             // Move the player into the new screen
             FlxTween.tween(player, {y: player.y - player.height}, 2.0);

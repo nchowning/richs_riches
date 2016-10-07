@@ -7,12 +7,14 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.addons.display.FlxBackdrop;
 import flixel.group.FlxGroup;
+import flixel.input.gamepad.FlxGamepad;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 
+import enemies.Enemy;
 import objects.Coin;
 import objects.Obtainable;
 import objects.Player;
@@ -22,11 +24,14 @@ import utils.LevelLoader;
 
 class PlatformState extends FlxState
 {
+    private var hud:HUD;
+
     public var backdrops(default, null):FlxTypedGroup<FlxSprite>;
 
     public var mapBackground:FlxTilemap;
     public var mapPlatforms:FlxTilemap;
     public var mapCollide:FlxTilemap;
+    public var mapKill:FlxTilemap;
     public var mapForeground:FlxTilemap;
 
     public var warps:FlxGroup;
@@ -42,6 +47,9 @@ class PlatformState extends FlxState
 	override public function create():Void
 	{
         Reg.STATE = cast this;
+        Reg.GAMEPAD = FlxG.gamepads.lastActive;
+
+        hud = new HUD();
 
         // Initialize map backdrops, objects, & player
         backdrops = new FlxTypedGroup<FlxSprite>();
@@ -67,9 +75,12 @@ class PlatformState extends FlxState
         add(obtainables);
         add(enemies);
         add(mapPlatforms);
+        add(mapKill);
         add(player);
         add(mapCollide);
         add(mapForeground);
+
+        add(hud);
 
 		super.create();
 	}
@@ -82,10 +93,15 @@ class PlatformState extends FlxState
         if (player.alive)
         {
             FlxG.collide(mapCollide, player);
-            FlxG.overlap(obtainables, player, collectObtainables);
-            FlxG.overlap(warps, player, warpPlayer);
+
+            FlxG.overlap(obtainables, player, collideWithPlayer);
+            FlxG.overlap(warps, player, collideWithPlayer);
+            
             FlxG.collide(mapPlatforms, player);
-            FlxG.overlap(screens, player, screenTransition);
+            
+            FlxG.overlap(screens, player, collideWithPlayer);
+            
+            FlxG.collide(mapKill, player, collideWithPlayer);
         }
 
         // Enemy collision detection
@@ -94,28 +110,44 @@ class PlatformState extends FlxState
         FlxG.collide(enemies, enemies);
 	}
 
-    private function collectObtainables(obtainable:Obtainable, player:Player):Void
+    private function collideWithPlayer(entity:FlxObject, player:Player):Void
     {
-        obtainable.collect();
-    }
+        // Map warp collision
+        if (Std.is(entity, Warp))
+        {
+            if (player.lookingUp)
+                (cast entity).warpToLevel();
+        }
 
-    private function warpPlayer(warp:Warp, player:Player):Void
-    {
-        if (player.lookingUp)
-            warp.warpToLevel();
-    }
+        // Screen scroll collision
+        else if (Std.is(entity, Screen))
+        {
+            var screen = cast entity;
 
-    private function screenTransition(screen:Screen, player:Player):Void
-    {
-        // If this is already the active screen, skip
-        if (screen == activeScreen)
-            return;
-        
-        // If we're transitioning to a new screen, skip
-        if (screenTransitioning)
-            return;
+            // If this is already the active screen, skip
+            if (screen == activeScreen)
+                return;
+            
+            // If we're transitioning to a new screen, skip
+            if (screenTransitioning)
+                return;
 
-        screenTransitioning = true;
-        screen.transition(this);
+            screenTransitioning = true;
+            screen.transition(this);
+        }
+
+        // Obtainable collision
+        else if (Std.is(entity, Obtainable))
+            (cast entity).collect();
+
+        // Enemy collision
+        else if (Std.is(entity, Enemy))
+            (cast entity).hit(player);
+
+        // Must be a kill tile! loool
+        else
+        {
+            player.hurt(1.0);
+        }
     }
 }
