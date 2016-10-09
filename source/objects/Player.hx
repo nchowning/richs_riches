@@ -74,8 +74,15 @@ class Player extends FlxSprite
         // Basic over-all map collisions
         if (x < 0)
             x = 0;
+
         // TODO implement right side bounds
 
+        // Kill player if they have fallen into a hole
+        if (alive && getScreenPosition().y > 144)
+            kill();
+
+        // If the screen is transitioning, don't update
+        // This disables vertical (gravity) movement
         if (!Reg.STATE.screenTransitioning)
             super.update(elapsed);
     }
@@ -85,6 +92,9 @@ class Player extends FlxSprite
         // If the player is currently invulnerable, he can't get hurt again
         if (invulnerable)
             return;
+
+        if (health < 0)
+            health = 0;
 
         super.hurt(damage);
 
@@ -107,6 +117,7 @@ class Player extends FlxSprite
     {
         if (alive)
         {
+            health = 0;
             alive = false;
 
             velocity.set(0, 0);
@@ -164,6 +175,19 @@ class Player extends FlxSprite
             lookingUp = true;
         else
             lookingUp = false;
+    }
+
+    public function bounce():Void
+    {
+        if (FlxG.keys.anyPressed([Reg.inputMap["a"]]) ||
+            Reg.GAMEPAD != null && Reg.GAMEPAD.anyPressed([Reg.gamepadInputMap["a"]]))
+        {
+            velocity.y = _jumpForce;
+        }
+        else
+        {
+            velocity.y = _jumpForce / 2;
+        }
     }
 
     private function animate()

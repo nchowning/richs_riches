@@ -36,6 +36,11 @@ class HUD extends FlxSpriteGroup
 
     override public function update(elapsed:Float)
     {
+        if (Reg.STATE.player.health < 0)
+            Reg.STATE.player.health = 0;
+        else if (Reg.STATE.player.health > 4)
+            Reg.STATE.player.health = 4;
+
         iconHealth.animation.play(Std.string(Std.int(Reg.STATE.player.health)));
         super.update(elapsed);
     }

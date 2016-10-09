@@ -39,6 +39,7 @@ class PlatformState extends FlxState
     public var obtainables:FlxGroup;
     public var coins(default, null):FlxTypedGroup<FlxSprite>;
     public var enemies:FlxGroup;
+    public var explosionFragments:FlxGroup;
 
     public var player(default, null):Player;
     public var activeScreen:Screen;
@@ -58,6 +59,7 @@ class PlatformState extends FlxState
         obtainables = new FlxGroup();
         coins = new FlxTypedGroup<FlxSprite>();
         enemies = new FlxGroup();
+        explosionFragments = new FlxGroup();
         player = new Player();
 
         // Load the level
@@ -74,6 +76,7 @@ class PlatformState extends FlxState
         add(mapBackground);
         add(obtainables);
         add(enemies);
+        add(explosionFragments);
         add(mapPlatforms);
         add(mapKill);
         add(player);
@@ -101,6 +104,8 @@ class PlatformState extends FlxState
             
             FlxG.overlap(screens, player, collideWithPlayer);
             
+            FlxG.overlap(enemies, player, collideWithPlayer);
+            FlxG.overlap(explosionFragments, player, collideWithPlayer);
             FlxG.collide(mapKill, player, collideWithPlayer);
         }
 
@@ -142,7 +147,7 @@ class PlatformState extends FlxState
 
         // Enemy collision
         else if (Std.is(entity, Enemy))
-            (cast entity).hit(player);
+            (cast entity).interact(player);
 
         // Must be a kill tile! loool
         else

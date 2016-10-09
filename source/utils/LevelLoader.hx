@@ -11,7 +11,10 @@ import flixel.addons.editors.tiled.TiledObjectLayer;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
 
+import enemies.Blocker;
 import enemies.Diamond;
+import enemies.FireworkJewel;
+import enemies.FireworkJewelSpawner;
 import enemies.Placeholder;
 import objects.Coin;
 import objects.Screen;
@@ -58,7 +61,7 @@ class LevelLoader
         {
             switch(obtainable.type)
             {
-                case "coin":
+                case "Coin":
                     Reg.STATE.coins.add(new Coin(obtainable.x, obtainable.y - 8));
             }
         }
@@ -69,17 +72,16 @@ class LevelLoader
             switch(enemy.type)
             {
                 default:
-                    Reg.STATE.enemies.add(new Placeholder(enemy.x, enemy.y - 6));
+                    Reg.STATE.enemies.add(new Placeholder(enemy.x, enemy.y));
 
-                case "blocker":
-                {
-                    var blocker = new FlxObject(enemy.x, enemy.y, enemy.width, enemy.height);
-                    blocker.moves = false;
-                    Reg.STATE.enemies.add(blocker);
-                }
+                case "Blocker":
+                    Reg.STATE.enemies.add(new Blocker(enemy.x, enemy.y, enemy.width, enemy.height));
 
-                case "diamond":
-                    Reg.STATE.enemies.add(new Diamond(enemy.x, enemy.y - 12));
+                case "Diamond":
+                    Reg.STATE.enemies.add(new Diamond(enemy.x, enemy.y + 3));
+
+                case "FireworkJewelSpawner":
+                    Reg.STATE.enemies.add(new FireworkJewelSpawner(enemy.x, enemy.y));
             }
         }
 
@@ -100,7 +102,7 @@ class LevelLoader
 
         // Set the player's start position
         var playerPos:TiledObject = getObjectLayer(tiledMap, "player")[0];
-        Reg.STATE.player.setPosition(playerPos.x, playerPos.y - 15);
+        Reg.STATE.player.setPosition(playerPos.x, playerPos.y + 1);
     }
 
     private static function setupBackdrops(map:TiledMap):Void
