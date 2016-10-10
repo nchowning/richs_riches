@@ -2,7 +2,7 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Rich's Riches" file="riches" main="Main" version="0.0.1" company="Chowning Games" />
+	<app title="Rich's Riches" file="riches" main="Main" version="1.0.0" company="YesImNathan Games" />
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->

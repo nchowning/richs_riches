@@ -18,7 +18,7 @@ class Obtainable extends FlxSprite
             super.update(elapsed);
     }
 
-    public function collect()
+    public function collect(player:Player)
     {
         Reg.MONEY += VALUE;
         kill();

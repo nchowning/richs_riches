@@ -9,9 +9,12 @@ import flixel.util.FlxSpriteUtil;
 
 class Player extends FlxSprite
 {
+
+    private static var maxHealth:Float = 4.0;
+
     private static var _acceleration:Int = 300;
     private static var _drag:Int = 300;
-    private static var _gravity:Int = 600;
+    private static var _gravity:Int = 500;
     private static var _jumpForce:Int = -175;
     private static var _walkSpeed:Int = 55;
     private static var _fallingSpeed:Int = 300;
@@ -77,14 +80,22 @@ class Player extends FlxSprite
 
         // TODO implement right side bounds
 
+        // TODO this is buggy
         // Kill player if they have fallen into a hole
-        if (alive && getScreenPosition().y > 144)
-            kill();
+        // if (alive && getScreenPosition().y > 144)
+        //     kill();
 
         // If the screen is transitioning, don't update
         // This disables vertical (gravity) movement
         if (!Reg.STATE.screenTransitioning)
             super.update(elapsed);
+    }
+
+    public function heal(amount:Float):Void
+    {
+        health += amount;
+        if (health > maxHealth)
+            health = maxHealth;
     }
 
     override public function hurt(damage:Float):Void

@@ -87,6 +87,8 @@ class Screen extends FlxObject
             // Move the player into the new screen
             FlxTween.tween(player, {y: player.y - player.height}, 2.0);
         }
+        else
+            trace("Could not determine a side");
     }
 
     public function endTransition(_):Void

@@ -19,4 +19,10 @@ class Coin extends Obtainable
         setSize(6, 6);
         offset.set(1, 1);
     }
+
+    override public function collect(player:Player)
+    {
+        player.heal(1.0);
+        kill();
+    }
 }

@@ -14,6 +14,9 @@ class Enemy extends FlxSprite
     private var _fallingSpeed:Int = 300;
     private var _direction:Int = -1;
 
+    private var canDamage:Bool = true;
+    private var canDamageTimer:FlxTimer = new FlxTimer();
+
     public function new(x:Float, y:Float)
     {
         super(x, y);
@@ -27,13 +30,6 @@ class Enemy extends FlxSprite
         if (isOnScreen() && alive)
         {
             move();
-
-            if (justTouched(FlxObject.WALL))
-            {
-
-                _direction *= -1;
-                flipX = !flipX;
-            }
         }
 
         if (!Reg.PAUSE)
@@ -55,7 +51,15 @@ class Enemy extends FlxSprite
         }, 1);
     }
 
-    private function move() {}
+    private function move()
+    {
+        if (justTouched(FlxObject.WALL))
+        {
+
+            _direction *= -1;
+            flipX = !flipX;
+        }
+    }
 
     public function interact(player:Player)
     {
@@ -67,10 +71,19 @@ class Enemy extends FlxSprite
 
         if ((player.velocity.y > 0) && (isTouching(FlxObject.UP)))
         {
-            kill();
+            canDamage = false;
+            hurt(1.0);
             player.bounce();
+            canDamageTimer.cancel();
+            canDamageTimer.start(0.5, function(_)
+            {
+                canDamage = true;
+            }, 1);
+
         }
-        else
+        else if (canDamage)
+        {
             player.hurt(1.0);
+        }
     }
 }

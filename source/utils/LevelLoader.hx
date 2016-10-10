@@ -11,10 +11,12 @@ import flixel.addons.editors.tiled.TiledObjectLayer;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
 
+import enemies.BlingMan;
 import enemies.Blocker;
 import enemies.Diamond;
 import enemies.FireworkJewel;
 import enemies.FireworkJewelSpawner;
+import enemies.Miner;
 import enemies.Placeholder;
 import objects.Coin;
 import objects.Screen;
@@ -62,7 +64,7 @@ class LevelLoader
             switch(obtainable.type)
             {
                 case "Coin":
-                    Reg.STATE.coins.add(new Coin(obtainable.x, obtainable.y - 8));
+                    Reg.STATE.coins.add(new Coin(obtainable.x, obtainable.y));
             }
         }
 
@@ -78,10 +80,16 @@ class LevelLoader
                     Reg.STATE.enemies.add(new Blocker(enemy.x, enemy.y, enemy.width, enemy.height));
 
                 case "Diamond":
-                    Reg.STATE.enemies.add(new Diamond(enemy.x, enemy.y + 3));
+                    Reg.STATE.enemies.add(new Diamond(enemy.x, enemy.y));
+
+                case "Miner":
+                    Reg.STATE.enemies.add(new Miner(enemy.x, enemy.y));
 
                 case "FireworkJewelSpawner":
                     Reg.STATE.enemies.add(new FireworkJewelSpawner(enemy.x, enemy.y));
+
+                case "BlingMan":
+                    Reg.STATE.enemies.add(new BlingMan(enemy.x, enemy.y));
             }
         }
 

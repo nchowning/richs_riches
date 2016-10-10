@@ -6,6 +6,7 @@ class Diamond extends Enemy
     {
         super(x, y);
 
+        health = 1.0;
         _walkSpeed = 40;
 
         loadGraphic("assets/images/enemies/diamond.png", true, 16, 16);
@@ -20,6 +21,7 @@ class Diamond extends Enemy
 
     override private function move()
     {
+        super.move();
         velocity.x = _walkSpeed * _direction;
     }
 }

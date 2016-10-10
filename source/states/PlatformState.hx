@@ -143,7 +143,7 @@ class PlatformState extends FlxState
 
         // Obtainable collision
         else if (Std.is(entity, Obtainable))
-            (cast entity).collect();
+            (cast entity).collect(player);
 
         // Enemy collision
         else if (Std.is(entity, Enemy))
@@ -152,7 +152,8 @@ class PlatformState extends FlxState
         // Must be a kill tile! loool
         else
         {
-            player.hurt(1.0);
+            player.health = 0;
+            player.kill();
         }
     }
 }

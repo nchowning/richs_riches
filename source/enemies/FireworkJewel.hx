@@ -51,9 +51,9 @@ class FireworkJewel extends Enemy
     override public function kill()
     {
         alive = false;
+        visible = false;
 
         velocity.y = 0;
-        visible = false;
     }
 
     override public function interact(player:Player)
